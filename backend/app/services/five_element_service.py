@@ -5,6 +5,7 @@ from app.schemas.five_element import (
     FiveElementScore,
     FiveElementSummaryItem,
     Gender,
+    MbtiType,
 )
 
 ELEMENT_META = {
@@ -60,7 +61,7 @@ YEAR_LAST_DIGIT_ELEMENT = {
 
 
 class FiveElementService:
-    def analyze(self, birth_date: date, gender: Gender) -> FiveElementAnalyzeResponse:
+    def analyze(self, birth_date: date, gender: Gender, mbti_type: MbtiType | None = None) -> FiveElementAnalyzeResponse:
         raw_scores = dict.fromkeys(ELEMENT_ORDER, 8)
         raw_scores[MONTH_ELEMENT[birth_date.month]] += 50
         raw_scores[DAY_LAST_DIGIT_ELEMENT[birth_date.day % 10]] += 30
@@ -94,6 +95,7 @@ class FiveElementService:
         return FiveElementAnalyzeResponse(
             birth_date=birth_date,
             gender=gender,
+            mbti_type=mbti_type,
             scores=scores,
             elements=elements,
             dominant_element=dominant_element,

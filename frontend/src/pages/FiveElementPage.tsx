@@ -4,6 +4,7 @@ import {
   FiveElementAnalyzeResponse,
   Gender,
   ElementKey,
+  MbtiType,
 } from "../api/fiveElement";
 import { FiveElementRadar } from "../components/FiveElementRadar";
 import { MarkdownView } from "../components/MarkdownView";
@@ -40,6 +41,26 @@ const genderOptions: Array<{ value: Gender; label: string }> = [
   { value: "other", label: "其他" },
 ];
 
+const mbtiOptions: Array<{ value: MbtiType | ""; label: string }> = [
+  { value: "", label: "不选择" },
+  { value: "INTJ", label: "INTJ" },
+  { value: "INTP", label: "INTP" },
+  { value: "ENTJ", label: "ENTJ" },
+  { value: "ENTP", label: "ENTP" },
+  { value: "INFJ", label: "INFJ" },
+  { value: "INFP", label: "INFP" },
+  { value: "ENFJ", label: "ENFJ" },
+  { value: "ENFP", label: "ENFP" },
+  { value: "ISTJ", label: "ISTJ" },
+  { value: "ISFJ", label: "ISFJ" },
+  { value: "ESTJ", label: "ESTJ" },
+  { value: "ESFJ", label: "ESFJ" },
+  { value: "ISTP", label: "ISTP" },
+  { value: "ISFP", label: "ISFP" },
+  { value: "ESTP", label: "ESTP" },
+  { value: "ESFP", label: "ESFP" },
+];
+
 type FiveElementPageProps = {
   onBack: () => void;
 };
@@ -47,6 +68,7 @@ type FiveElementPageProps = {
 export function FiveElementPage({ onBack }: FiveElementPageProps) {
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState<Gender>("unspecified");
+  const [mbti, setMbti] = useState<MbtiType | "">("");
   const [result, setResult] = useState<FiveElementAnalyzeResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -63,11 +85,11 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
     setLoading(true);
     setError("");
     try {
-      const data = await analyzeFiveElements(birthDate, gender);
+      const data = await analyzeFiveElements(birthDate, gender, mbti || undefined);
       setResult(data);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "五行画像生成失败，请稍后再试"
+        err instanceof Error ? err.message : "画像生成失败，请稍后再试"
       );
     } finally {
       setLoading(false);
@@ -94,7 +116,7 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
       }
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = "五行画像.png";
+      link.download = "易境画像.png";
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);
@@ -133,7 +155,7 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
 
       console.log("[分享] navigator.share 存在:", !!navigator.share);
       if (navigator.share) {
-        const file = new File([blob], "五行画像.png", { type: "image/png" });
+        const file = new File([blob], "易境画像.png", { type: "image/png" });
         console.log("[分享] File 创建完成，大小:", file.size, "bytes");
         console.log("[分享] navigator.canShare 存在:", typeof navigator.canShare);
         if (navigator.canShare) {
@@ -145,7 +167,7 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
         try {
           console.log("[分享] 调用 navigator.share...");
           await navigator.share({
-            title: "我的五行画像",
+            title: "我的易境画像",
             files: [file],
           });
           console.log("[分享] navigator.share 成功");
@@ -159,7 +181,7 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
       console.log("[分享] 降级到下载");
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = "五行画像.png";
+      link.download = "易境画像.png";
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);
@@ -180,7 +202,7 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
         <button className="back-btn" onClick={onBack}>
           ← 首页
         </button>
-        <span className="nav-title">五行画像</span>
+        <span className="nav-title">易境画像</span>
         <span className="nav-empty" />
       </nav>
 
@@ -212,6 +234,24 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
               ))}
             </div>
           </div>
+
+          <label className="field-block">
+            <span>MBTI 类型（可选）</span>
+            <select
+              className="mbti-select"
+              value={mbti}
+              onChange={(event) => setMbti(event.target.value as MbtiType | "")}
+            >
+              {mbtiOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <span className="field-hint">
+              选择后可触发五行 × MBTI 融合分析
+            </span>
+          </label>
 
           <button
             className="primary-button"
@@ -251,7 +291,7 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
             </p>
             <div className="ceremony-stamp">
               <span className="stamp-dot" />
-              <span className="stamp-text">专属五行画像</span>
+              <span className="stamp-text">易境专属画像</span>
             </div>
           </section>
 
@@ -301,9 +341,72 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
             </div>
             <article className="ai-letter">
               <MarkdownView markdown={result.ai_markdown} />
-              <div className="ai-seal">—— 国学助手 · AI 解读</div>
+              <div className="ai-seal">—— 易境 · AI 解读</div>
             </article>
           </section>
+
+          {/* Personality Tag Card */}
+          {result.personality_tag && (
+            <section className="tag-section">
+              <div className="tag-section-header">
+                <span className="tag-header-dot" />
+                <span className="tag-header-label">易境人格标签</span>
+                <span className="tag-header-note">五行 × MBTI 融合</span>
+              </div>
+              <div className="tag-card">
+                <div className="tag-card-wash" />
+                <div className="tag-corner-bl" />
+                <div className="tag-label-hero">
+                  {result.personality_tag.label}
+                </div>
+                <div className="tag-combination">
+                  {result.personality_tag.combination}
+                </div>
+                <div className="tag-divider-ornament">
+                  <span className="tag-divider-ornament-dot" />
+                </div>
+                <p className="tag-explanation">
+                  {result.personality_tag.explanation}
+                </p>
+                <div className="tag-grid">
+                  <div className="tag-grid-item">
+                    <h4 className="tag-grid-heading strengths-heading">优势</h4>
+                    <p className="tag-grid-text">
+                      {result.personality_tag.strengths}
+                    </p>
+                  </div>
+                  <div className="tag-grid-item">
+                    <h4 className="tag-grid-heading risks-heading">潜在盲区</h4>
+                    <p className="tag-grid-text">
+                      {result.personality_tag.risks}
+                    </p>
+                  </div>
+                </div>
+                <div className="tag-suggestions">
+                  <h4 className="tag-grid-heading suggestions-heading">成长建议</h4>
+                  <p className="tag-grid-text">
+                    {result.personality_tag.suggestions}
+                  </p>
+                </div>
+                <div className="tag-card-seal">易境 · 人格观察</div>
+              </div>
+            </section>
+          )}
+
+          {/* MBTI + Five Elements Extended Reading */}
+          {result.fusion_markdown && (
+            <section className="ai-section fusion-section">
+              <div className="ai-header fusion-header">
+                <span className="ai-header-dot fusion-dot" />
+                <span className="ai-header-label">
+                  五行 × {result.mbti_type} 融合观察
+                </span>
+              </div>
+              <article className="ai-letter fusion-letter">
+                <MarkdownView markdown={result.fusion_markdown} />
+              </article>
+            </section>
+          )}
 
           {/* Share Buttons */}
           <div className="share-row">

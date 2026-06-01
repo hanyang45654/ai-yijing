@@ -534,7 +534,16 @@ h1 {
   border: none;
   cursor: pointer;
   letter-spacing: 0.04em;
-  padding: 4px 0;
+  padding: 8px 12px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: background 180ms ease;
+}
+
+.back-btn:hover {
+  background: rgba(61, 48, 34, 0.04);
 }
 
 .nav-title {
@@ -669,6 +678,112 @@ h1 {
   vertical-align: middle;
 }
 
+/* ---- Product Intro Card ---- */
+
+.intro-card {
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 40px;
+  border: 1px solid rgba(61, 48, 34, 0.08);
+  border-radius: 4px;
+  background: rgba(255, 253, 247, 0.35);
+  overflow: hidden;
+  transition: background 280ms ease, border-color 280ms ease;
+}
+
+.intro-card.intro-expanded {
+  background: rgba(255, 253, 247, 0.6);
+  border-color: rgba(61, 48, 34, 0.12);
+}
+
+.intro-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0;
+  font-family: "KaiTi", "STKaiti", serif;
+  font-size: 13px;
+  color: #8a735a;
+  letter-spacing: 0.08em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.intro-toggle:hover {
+  color: #675744;
+}
+
+.intro-toggle-icon {
+  font-size: 14px;
+  line-height: 1;
+  color: #b8a48e;
+  transition: color 180ms ease;
+}
+
+.intro-body {
+  padding: 4px 24px 22px;
+  text-align: center;
+  animation: introSlideIn 300ms ease;
+}
+
+@keyframes introSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.intro-body p {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: #675744;
+  line-height: 1.9;
+  letter-spacing: 0.04em;
+}
+
+.intro-body p:last-child {
+  margin-bottom: 0;
+}
+
+.intro-pillars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(61, 48, 34, 0.06);
+}
+
+.intro-pillar {
+  font-family: "KaiTi", "STKaiti", serif;
+  font-size: 13px;
+  color: #8f2e27;
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+}
+
+.intro-pillar em {
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 700;
+  margin-right: 2px;
+}
+
+.intro-pillar-sep {
+  width: 1px;
+  height: 12px;
+  background: rgba(61, 48, 34, 0.1);
+}
+
 .home-btn-area {
   width: 100%;
   max-width: 300px;
@@ -765,6 +880,21 @@ h1 {
   opacity: 0.55;
 }
 
+.btn-tag {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 3px 8px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(255, 250, 241, 0.7);
+  border: 0.5px solid rgba(255, 250, 241, 0.2);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
 .home-footer {
   margin-top: 48px;
   text-align: center;
@@ -858,14 +988,49 @@ h1 {
   background: rgba(143, 46, 39, 0.08);
 }
 
+.mbti-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(61, 48, 34, 0.18);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 14px;
+  color: #241f19;
+  background: rgba(255, 252, 247, 0.7);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23675744' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  transition: border-color 180ms ease;
+}
+
+.mbti-select:focus {
+  outline: none;
+  border-color: #8f2e27;
+  box-shadow: 0 0 0 2px rgba(143, 46, 39, 0.1);
+}
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #927b62;
+  letter-spacing: 0.04em;
+}
+
 .five-form .primary-button {
-  justify-self: start;
+  justify-self: center;
+  min-width: 200px;
 }
 
 .five-form .note {
+  text-align: center;
   color: #927b62;
   font-size: 12px;
   line-height: 1.7;
+  margin: 8px 0 0;
 }
 
 /* ---- Element Hero (dominant element celebration) ---- */
@@ -1271,6 +1436,301 @@ h1 {
   opacity: 0.7;
 }
 
+/* ---- Personality Tag Card ---- */
+
+.tag-section {
+  width: min(760px, 100%);
+  margin: 40px auto 0;
+}
+
+.tag-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tag-header-dot {
+  width: 8px;
+  height: 8px;
+  background: #8f2e27;
+  border-radius: 50%;
+}
+
+.tag-header-label {
+  font-family: "KaiTi", "STKaiti", serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #3d3022;
+  letter-spacing: 0.06em;
+}
+
+.tag-header-note {
+  font-size: 12px;
+  color: #9e8d78;
+  letter-spacing: 0.04em;
+}
+
+.tag-card {
+  position: relative;
+  padding: 56px 48px 40px;
+  border-radius: 4px;
+  border: 2px solid rgba(143, 46, 39, 0.15);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 247, 0.8), rgba(247, 240, 226, 0.7)),
+    repeating-linear-gradient(0deg, rgba(95, 72, 46, 0.018) 0 1px, transparent 1px 18px);
+  overflow: hidden;
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Inner decorative border */
+.tag-card::before {
+  position: absolute;
+  inset: 12px;
+  content: "";
+  border: 1px solid rgba(143, 46, 39, 0.07);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Corner ornaments */
+.tag-card::after {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  width: 24px;
+  height: 24px;
+  content: "";
+  border-top: 2px solid rgba(143, 46, 39, 0.15);
+  border-right: 2px solid rgba(143, 46, 39, 0.15);
+  pointer-events: none;
+}
+
+.tag-corner-bl {
+  position: absolute;
+  bottom: 16px;
+  left: 20px;
+  width: 24px;
+  height: 24px;
+  border-bottom: 2px solid rgba(143, 46, 39, 0.15);
+  border-left: 2px solid rgba(143, 46, 39, 0.15);
+  pointer-events: none;
+}
+
+.tag-card-wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(143, 46, 39, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 90%, rgba(184, 146, 62, 0.04) 0%, transparent 45%),
+    radial-gradient(ellipse at 15% 80%, rgba(58, 111, 138, 0.02) 0%, transparent 40%);
+}
+
+.tag-label-hero {
+  position: relative;
+  font-family: "KaiTi", "STKaiti", serif;
+  font-size: 52px;
+  font-weight: 900;
+  color: #8f2e27;
+  text-align: center;
+  letter-spacing: 0.14em;
+  padding: 16px 0;
+  margin-bottom: 4px;
+  line-height: 1.05;
+  text-shadow:
+    0.5px 0.5px 0 rgba(143, 46, 39, 0.3),
+    -0.5px -0.5px 0 rgba(143, 46, 39, 0.1);
+}
+
+/* Decorative line below label */
+.tag-label-hero::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 2px;
+  margin: 16px auto 0;
+  background: linear-gradient(90deg, transparent, rgba(143, 46, 39, 0.3), transparent);
+  border-radius: 1px;
+}
+
+/* Small diamond ornament on the divider */
+.tag-divider-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 22px auto;
+  max-width: 300px;
+}
+
+.tag-divider-ornament::before,
+.tag-divider-ornament::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(61, 48, 34, 0.08);
+}
+
+.tag-divider-ornament-dot {
+  width: 4px;
+  height: 4px;
+  background: rgba(143, 46, 39, 0.3);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tag-combination {
+  position: relative;
+  text-align: center;
+  font-size: 14px;
+  color: #9e8d78;
+  letter-spacing: 0.1em;
+  margin-bottom: 0;
+}
+
+.tag-explanation {
+  position: relative;
+  font-size: 14px;
+  line-height: 1.9;
+  color: #675744;
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto 36px;
+}
+
+.tag-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.tag-grid-item {
+  padding: 24px;
+  border-radius: 4px;
+  background: rgba(61, 48, 34, 0.02);
+  border: 1px solid rgba(61, 48, 34, 0.06);
+}
+
+.tag-grid-heading {
+  font-family: "KaiTi", "STKaiti", serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  letter-spacing: 0.08em;
+}
+
+.strengths-heading {
+  color: #5a8a5a;
+}
+
+.risks-heading {
+  color: #b8923e;
+}
+
+.suggestions-heading {
+  color: #3a6f8a;
+}
+
+.tag-grid-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #675744;
+  white-space: pre-line;
+}
+
+.tag-suggestions {
+  position: relative;
+  padding: 24px;
+  border-radius: 4px;
+  background: rgba(58, 111, 138, 0.03);
+  border: 1px solid rgba(58, 111, 138, 0.1);
+  margin-bottom: 28px;
+}
+
+.tag-card-seal {
+  text-align: right;
+  font-family: "KaiTi", "STKaiti", serif;
+  font-size: 13px;
+  color: #8f2e27;
+  letter-spacing: 0.1em;
+  opacity: 0.55;
+}
+
+@media (max-width: 520px) {
+  .tag-card {
+    padding: 36px 24px 28px;
+  }
+
+  .tag-card::before {
+    inset: 8px;
+  }
+
+  .tag-card::after {
+    top: 12px;
+    right: 14px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .tag-corner-bl {
+    bottom: 12px;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .tag-label-hero {
+    font-size: 38px;
+    letter-spacing: 0.1em;
+    padding: 10px 0;
+  }
+
+  .tag-label-hero::after {
+    width: 40px;
+    margin: 12px auto 0;
+  }
+
+  .tag-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tag-explanation {
+    text-align: left;
+  }
+
+  .tag-grid-item {
+    padding: 18px;
+  }
+
+  .tag-suggestions {
+    padding: 18px;
+  }
+}
+
+/* ---- MBTI Fusion Section ---- */
+
+.fusion-section {
+  margin-top: 36px;
+}
+
+.fusion-header .ai-header-dot.fusion-dot {
+  background: #b8923e;
+}
+
+.fusion-letter {
+  border-left-color: #b8923e;
+}
+
+.fusion-letter::before {
+  background: rgba(184, 146, 62, 0.5);
+}
+
 /* ---- Share Buttons ---- */
 
 .share-row {
@@ -1278,7 +1738,7 @@ h1 {
   justify-content: center;
   gap: 16px;
   width: min(760px, 100%);
-  margin: 28px auto 0;
+  margin: 40px auto 24px;
 }
 
 .share-btn {
@@ -1520,6 +1980,60 @@ h1 {
   background: rgba(61, 48, 34, 0.08);
 }
 
+/* ---- Share Card: Tag-first layout ---- */
+
+.share-card-tag .card-inner {
+  padding: 28px 32px 22px;
+}
+
+.card-tag-hero {
+  font-family: "KaiTi", "STKaiti", serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: #8f2e27;
+  letter-spacing: 0.12em;
+  text-align: center;
+  margin: 32px 0 4px;
+  line-height: 1.08;
+}
+
+.card-tag-combo {
+  text-align: center;
+  font-size: 12px;
+  color: #8a735a;
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+}
+
+/* Five element dots — minimal balance indicator */
+.card-tag-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.card-tag-dot {
+  border-radius: 50%;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.card-summary-tag {
+  padding: 10px 0 0;
+  border-top: 1px solid rgba(61, 48, 34, 0.07);
+  border-bottom: none;
+  text-align: center;
+}
+
+.card-summary-tag em {
+  font-size: 13px;
+  color: #8f2e27;
+  font-weight: 600;
+  font-style: normal;
+}
+
 /* ---- Radar Chart (used by FiveElementRadar) ---- */
 
 .five-radar {
@@ -1618,6 +2132,7 @@ h1 {
   /* Homepage responsive */
   .home-page {
     padding: 20px 0;
+    min-height: calc(100vh - 72px);
   }
 
   .brand-seal {
@@ -1639,12 +2154,32 @@ h1 {
   }
 
   .brand-subtitle {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+  }
+
+  .intro-card {
+    max-width: 260px;
+    margin-bottom: 28px;
+  }
+
+  .intro-body {
+    padding: 2px 18px 18px;
+  }
+
+  .intro-toggle {
+    padding: 14px 0;
+    font-size: 14px;
   }
 
   .entry-btn {
     height: 54px;
     font-size: 18px;
+  }
+
+  .btn-tag {
+    right: 10px;
+    font-size: 8px;
+    padding: 2px 6px;
   }
 
   /* Five elements responsive */
@@ -1684,6 +2219,11 @@ h1 {
 
   .five-form {
     padding: 28px 22px;
+    gap: 18px;
+  }
+
+  .field-block input[type="date"] {
+    width: 100%;
   }
 
   .breakdown {
@@ -1739,5 +2279,26 @@ h1 {
   .card-summary {
     font-size: 11px;
     max-width: 220px;
+  }
+
+  /* Tag card responsive */
+  .share-card-tag .card-inner {
+    padding: 22px 18px 16px;
+  }
+
+  .card-tag-hero {
+    font-size: 34px;
+    margin: 22px 0 2px;
+    letter-spacing: 0.08em;
+  }
+
+  .card-tag-combo {
+    font-size: 11px;
+    margin-bottom: 14px;
+  }
+
+  .card-tag-dots {
+    gap: 8px;
+    margin-bottom: 12px;
   }
 }

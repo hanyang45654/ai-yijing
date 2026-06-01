@@ -33,6 +33,8 @@ const ELEMENT_QUOTE: Record<ElementKey, string> = {
   water: "上善若水，柔韧而能穿石。",
 };
 
+const ELEMENT_ORDER: ElementKey[] = ["wood", "fire", "earth", "metal", "water"];
+
 type ShareCardProps = {
   result: FiveElementAnalyzeResponse;
 };
@@ -45,63 +47,98 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
     const quote = ELEMENT_QUOTE[dominantKey];
     const trait =
       result.elements.find((e) => e.key === dominantKey)?.symbol ?? "";
+    const hasTag = !!result.personality_tag;
 
     return (
       <div className="share-card-wrapper" ref={ref}>
-        <div className="share-card">
+        <div className={`share-card${hasTag ? " share-card-tag" : ""}`}>
           <div className="card-paper" />
           <div className="card-inner">
-            {/* Header: brand */}
+            {/* Header: brand + badge */}
             <div className="card-top">
               <div className="card-brand">
                 <div className="mini-seal">
                   <span>易</span>
                 </div>
-                <span className="card-brand-name">国学助手</span>
+                <span className="card-brand-name">易境</span>
               </div>
-              <span className="card-badge">五行画像</span>
+              <span className="card-badge">
+                {hasTag ? "人格标签" : "易境画像"}
+              </span>
             </div>
 
-            {/* Hero: dominant element */}
-            <span className="card-char" style={{ color: dominantColor }}>
-              {result.dominant_element.name}
-            </span>
-            <div className="card-element-name">
-              {result.dominant_element.name} · {poetic}
-            </div>
-            <div className="card-element-trait">{trait}</div>
+            {hasTag && result.personality_tag ? (
+              <>
+                {/* Tag-first layout: tag label dominates the card */}
+                <div className="card-tag-hero">
+                  {result.personality_tag.label}
+                </div>
+                <div className="card-tag-combo">
+                  {result.personality_tag.combination}
+                </div>
 
-            {/* Element distribution: horizontal gradient bars */}
-            <div className="card-bars">
-              {result.elements.map((item) => (
-                <div className="card-bar-row" key={item.key}>
-                  <span
-                    className="card-bar-label"
-                    style={{ color: ELEMENT_COLOR[item.key as ElementKey] }}
-                  >
-                    {item.name}
-                  </span>
-                  <span className="card-bar-track">
+                {/* Five-element dots (minimal) */}
+                <div className="card-tag-dots">
+                  {ELEMENT_ORDER.map((key) => (
                     <span
-                      className="card-bar-fill"
+                      key={key}
+                      className="card-tag-dot"
                       style={{
-                        width: `${item.score}%`,
-                        background:
-                          ELEMENT_GRADIENT[item.key as ElementKey],
+                        background: ELEMENT_COLOR[key],
+                        width: `${Math.max(6, result.scores[key] * 0.16)}px`,
+                        height: `${Math.max(6, result.scores[key] * 0.16)}px`,
                       }}
                     />
-                  </span>
-                  <span className="card-bar-pct">{item.score}%</span>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {/* Summary + quote */}
-            <p className="card-summary">
-              {result.summary}
-              <br />
-              <em>{quote}</em>
-            </p>
+                {/* Quote */}
+                <p className="card-summary card-summary-tag">
+                  <em>{quote}</em>
+                </p>
+              </>
+            ) : (
+              <>
+                {/* Element-focused layout */}
+                <span className="card-char" style={{ color: dominantColor }}>
+                  {result.dominant_element.name}
+                </span>
+                <div className="card-element-name">
+                  {result.dominant_element.name} · {poetic}
+                </div>
+                <div className="card-element-trait">{trait}</div>
+
+                <div className="card-bars">
+                  {result.elements.map((item) => (
+                    <div className="card-bar-row" key={item.key}>
+                      <span
+                        className="card-bar-label"
+                        style={{ color: ELEMENT_COLOR[item.key as ElementKey] }}
+                      >
+                        {item.name}
+                      </span>
+                      <span className="card-bar-track">
+                        <span
+                          className="card-bar-fill"
+                          style={{
+                            width: `${item.score}%`,
+                            background:
+                              ELEMENT_GRADIENT[item.key as ElementKey],
+                          }}
+                        />
+                      </span>
+                      <span className="card-bar-pct">{item.score}%</span>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="card-summary">
+                  {result.summary}
+                  <br />
+                  <em>{quote}</em>
+                </p>
+              </>
+            )}
 
             {/* Footer */}
             <div className="card-footer">
@@ -111,7 +148,7 @@ export const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(
                 不预测未来，不承诺结果
               </span>
               <span className="card-footer-divider" />
-              <span className="card-footer-text">AI 国学助手</span>
+              <span className="card-footer-text">易境</span>
             </div>
           </div>
         </div>
