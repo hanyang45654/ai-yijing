@@ -1,0 +1,7 @@
+.env
+backend/.env
+ai_yijing.db
+__pycache__/
+*.pyc
+node_modules/
+dist/

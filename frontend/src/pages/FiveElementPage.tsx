@@ -1,0 +1,334 @@
+import { FormEvent, useRef, useState } from "react";
+import {
+  analyzeFiveElements,
+  FiveElementAnalyzeResponse,
+  Gender,
+  ElementKey,
+} from "../api/fiveElement";
+import { FiveElementRadar } from "../components/FiveElementRadar";
+import { MarkdownView } from "../components/MarkdownView";
+import { ShareCard } from "../components/ShareCard";
+
+const ELEMENT_WASH: Record<ElementKey, string> = {
+  wood: "rgba(74,124,89,0.07)",
+  fire: "rgba(180,80,50,0.07)",
+  earth: "rgba(184,146,62,0.07)",
+  metal: "rgba(138,138,138,0.07)",
+  water: "rgba(58,95,138,0.07)",
+};
+
+const ELEMENT_COLOR: Record<ElementKey, string> = {
+  wood: "#5a8a5a",
+  fire: "#c94a3a",
+  earth: "#b8923e",
+  metal: "#8a8a8a",
+  water: "#3a6f8a",
+};
+
+const ELEMENT_POETIC: Record<ElementKey, string> = {
+  wood: "条达",
+  fire: "离明",
+  earth: "稼穑",
+  metal: "从革",
+  water: "润下",
+};
+
+const genderOptions: Array<{ value: Gender; label: string }> = [
+  { value: "unspecified", label: "不透露" },
+  { value: "female", label: "女性" },
+  { value: "male", label: "男性" },
+  { value: "other", label: "其他" },
+];
+
+type FiveElementPageProps = {
+  onBack: () => void;
+};
+
+export function FiveElementPage({ onBack }: FiveElementPageProps) {
+  const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState<Gender>("unspecified");
+  const [result, setResult] = useState<FiveElementAnalyzeResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [savingImage, setSavingImage] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!birthDate) {
+      setError("请先选择出生日期");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    try {
+      const data = await analyzeFiveElements(birthDate, gender);
+      setResult(data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "五行画像生成失败，请稍后再试"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleSaveImage() {
+    if (!shareCardRef.current) return;
+    setSavingImage(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(shareCardRef.current, {
+        scale: 2,
+        backgroundColor: null,
+        useCORS: true,
+        logging: false,
+      });
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+      if (!blob) {
+        setError("图片生成失败，请重试");
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = "五行画像.png";
+      link.href = url;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "图片保存失败，请稍后再试"
+      );
+    } finally {
+      setSavingImage(false);
+    }
+  }
+
+  async function handleShareImage() {
+    console.log("[分享] 开始执行");
+    if (!shareCardRef.current) {
+      console.log("[分享] 分享卡片 ref 不存在，退出");
+      return;
+    }
+    setSavingImage(true);
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(shareCardRef.current, {
+        scale: 2,
+        backgroundColor: null,
+        useCORS: true,
+        logging: false,
+      });
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+      console.log("[分享] blob 生成完成，大小:", blob?.size ?? 0, "bytes");
+      if (!blob) {
+        console.log("[分享] blob 为空，降级到保存图片");
+        return handleSaveImage();
+      }
+
+      console.log("[分享] navigator.share 存在:", !!navigator.share);
+      if (navigator.share) {
+        const file = new File([blob], "五行画像.png", { type: "image/png" });
+        console.log("[分享] File 创建完成，大小:", file.size, "bytes");
+        console.log("[分享] navigator.canShare 存在:", typeof navigator.canShare);
+        if (navigator.canShare) {
+          const canShareResult = navigator.canShare({ files: [file] });
+          console.log("[分享] navigator.canShare({ files: [file] }) 结果:", canShareResult);
+        } else {
+          console.log("[分享] navigator.canShare 方法不存在");
+        }
+        try {
+          console.log("[分享] 调用 navigator.share...");
+          await navigator.share({
+            title: "我的五行画像",
+            files: [file],
+          });
+          console.log("[分享] navigator.share 成功");
+          return;
+        } catch (shareErr) {
+          console.log("[分享] navigator.share 失败:", shareErr);
+          // User cancelled or share API failed — fall through to download
+        }
+      }
+
+      console.log("[分享] 降级到下载");
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = "五行画像.png";
+      link.href = url;
+      link.click();
+      URL.revokeObjectURL(url);
+      console.log("[分享] 下载触发完成");
+    } catch (err) {
+      console.log("[分享] 外层异常:", err);
+      setError(
+        err instanceof Error ? err.message : "图片分享失败，请稍后再试"
+      );
+    } finally {
+      setSavingImage(false);
+    }
+  }
+
+  return (
+    <>
+      <nav className="result-top-nav">
+        <button className="back-btn" onClick={onBack}>
+          ← 首页
+        </button>
+        <span className="nav-title">五行画像</span>
+        <span className="nav-empty" />
+      </nav>
+
+      {!result ? (
+        <form className="five-form" onSubmit={handleSubmit}>
+          <label className="field-block">
+            <span>出生日期</span>
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(event) => setBirthDate(event.target.value)}
+            />
+          </label>
+
+          <div className="field-block">
+            <span>性别（可选）</span>
+            <div className="segment-group">
+              {genderOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className={
+                    gender === option.value ? "segment active" : "segment"
+                  }
+                  onClick={() => setGender(option.value)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button
+            className="primary-button"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "正在生成画像" : "生成画像"}
+          </button>
+          <p className="note">
+            仅作传统文化解读与自我观察，不用于预测未来。
+          </p>
+        </form>
+      ) : (
+        <>
+          {/* Dominant Element Hero */}
+          <section className="element-hero">
+            <div
+              className="hero-wash"
+              style={{
+                background: `radial-gradient(circle, ${ELEMENT_WASH[result.dominant_element.key]} 0%, ${ELEMENT_WASH[result.dominant_element.key].replace("0.07", "0.03")} 40%, transparent 70%)`,
+              }}
+            />
+            <p className="hero-label">你的五行主元素</p>
+            <span
+              className="dominant-char"
+              style={{ color: ELEMENT_COLOR[result.dominant_element.key] }}
+            >
+              {result.dominant_element.name}
+            </span>
+            <h2 className="dominant-name">
+              {result.dominant_element.name} ·{" "}
+              {ELEMENT_POETIC[result.dominant_element.key]}
+            </h2>
+            <p className="dominant-trait">
+              {result.elements.find((e) => e.key === result.dominant_element.key)
+                ?.symbol ?? ""}
+            </p>
+            <div className="ceremony-stamp">
+              <span className="stamp-dot" />
+              <span className="stamp-text">专属五行画像</span>
+            </div>
+          </section>
+
+          {/* Radar */}
+          <h3 className="section-title">五行分布</h3>
+          <div className="radar-card">
+            <FiveElementRadar elements={result.elements} size={220} />
+          </div>
+          <div className="legend-row">
+            {result.elements.map((item) => (
+              <span className="legend-item" key={item.key}>
+                <span className={`legend-dot ${item.key}`} />
+                {item.name} {item.score}%
+              </span>
+            ))}
+          </div>
+
+          {/* Element Breakdown */}
+          <div className="breakdown">
+            {result.elements.map((item) => (
+              <div className="breakdown-row" key={item.key}>
+                <span
+                  className="elem-char"
+                  style={{ color: ELEMENT_COLOR[item.key] }}
+                >
+                  {item.name}
+                </span>
+                <span className="elem-symbol">{item.symbol}</span>
+                <span className="elem-track">
+                  <span
+                    className={`elem-fill ${item.key}`}
+                    style={{ width: `${item.score}%` }}
+                  />
+                </span>
+                <span className="elem-pct">{item.score}%</span>
+              </div>
+            ))}
+            <p className="breakdown-note">{result.summary}</p>
+          </div>
+
+          {/* AI Interpretation */}
+          <section className="ai-section">
+            <div className="ai-header">
+              <span className="ai-header-dot" />
+              <span className="ai-header-label">AI 文化解读</span>
+              <span className="ai-header-note">{result.note}</span>
+            </div>
+            <article className="ai-letter">
+              <MarkdownView markdown={result.ai_markdown} />
+              <div className="ai-seal">—— 国学助手 · AI 解读</div>
+            </article>
+          </section>
+
+          {/* Share Buttons */}
+          <div className="share-row">
+            <button
+              className="share-btn"
+              onClick={handleSaveImage}
+              disabled={savingImage}
+            >
+              {savingImage ? "生成中..." : "保存图片"}
+            </button>
+            <button
+              className="share-btn primary-action"
+              onClick={handleShareImage}
+              disabled={savingImage}
+            >
+              分享画像
+            </button>
+          </div>
+
+          {/* Offscreen share card for html2canvas */}
+          <ShareCard ref={shareCardRef} result={result} />
+        </>
+      )}
+
+      {error && <p className="error-text">{error}</p>}
+    </>
+  );
+}

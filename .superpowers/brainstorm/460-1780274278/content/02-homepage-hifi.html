@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --paper: #f7f1e4;
+    --ink: #1a1410;
+    --ink-light: #3a3028;
+    --vermilion: #8f2e27;
+    --gold: #8a6d3b;
+    --cream: #faf6ed;
+    --border: rgba(61,48,34,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Noto Serif SC", "STSong", "Songti SC", "KaiTi", serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  /* --- Paper texture --- */
+  .paper-ground {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      /* fiber lines */
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(139,119,90,0.02) 2px,
+        rgba(139,119,90,0.02) 4px
+      ),
+      /* subtle grain */
+      radial-gradient(ellipse at 20% 80%, rgba(139,119,90,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,119,90,0.04) 0%, transparent 50%),
+      /* warm base */
+      linear-gradient(175deg, #f9f3e7 0%, #f2ead9 40%, #f7f1e4 100%);
+  }
+
+  .paper-ground::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background:
+      radial-gradient(circle at 15% 25%, rgba(143,46,39,0.03) 0%, transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(138,109,59,0.03) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(26,20,16,0.02) 0%, transparent 70%);
+  }
+
+  /* --- Page container --- */
+  .page {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    padding: 80px 40px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* --- Ink splash decoration --- */
+  .ink-splash {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .ink-splash.top-right {
+    right: -30px;
+    top: 60px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(
+      ellipse at 60% 40%,
+      rgba(26,20,16,0.06) 0%,
+      rgba(26,20,16,0.03) 30%,
+      transparent 70%
+    );
+    border-radius: 40% 60% 60% 40% / 50% 50% 40% 60%;
+    transform: rotate(-15deg);
+    filter: blur(8px);
+  }
+
+  .ink-splash.bottom-left {
+    left: -40px;
+    bottom: 120px;
+    width: 220px;
+    height: 160px;
+    background: radial-gradient(
+      ellipse at 40% 60%,
+      rgba(26,20,16,0.05) 0%,
+      rgba(26,20,16,0.02) 35%,
+      transparent 70%
+    );
+    border-radius: 50% 40% 50% 60% / 60% 40% 50% 50%;
+    transform: rotate(20deg);
+    filter: blur(10px);
+  }
+
+  /* --- Floating ink dots --- */
+  .ink-dot {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 50%;
+    background: rgba(26,20,16,0.07);
+  }
+
+  .ink-dot.d1 { width: 8px; height: 8px; right: 80px; top: 200px; }
+  .ink-dot.d2 { width: 5px; height: 5px; right: 50px; top: 280px; opacity: 0.6; }
+  .ink-dot.d3 { width: 12px; height: 12px; left: 60px; top: 55%; opacity: 0.5; }
+  .ink-dot.d4 { width: 6px; height: 6px; left: 90px; bottom: 180px; opacity: 0.7; }
+
+  /* --- Brand block --- */
+  .brand-block {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .brand-mark {
+    display: inline-block;
+    position: relative;
+    margin-bottom: 36px;
+  }
+
+  /* --- Taiji symbol (CSS) --- */
+  .taiji {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: relative;
+    background: linear-gradient(180deg, #1a1410 0%, #1a1410 50%, #f7f1e4 50%, #f7f1e4 100%);
+    border: 1px solid rgba(26,20,16,0.15);
+    box-shadow:
+      0 0 0 8px rgba(143,46,39,0.03),
+      0 20px 60px rgba(26,20,16,0.08);
+    animation: taiji-rotate 60s linear infinite;
+  }
+
+  .taiji::before {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    top: 25%;
+    left: 25%;
+    background: radial-gradient(circle, #1a1410 0%, #1a1410 22%, #f7f1e4 22%, #f7f1e4 100%);
+    box-shadow: inset 0 0 0 1px rgba(26,20,16,0.08);
+  }
+
+  .taiji::after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    bottom: 25%;
+    left: 25%;
+    background: radial-gradient(circle, #f7f1e4 0%, #f7f1e4 22%, #1a1410 22%, #1a1410 100%);
+    box-shadow: inset 0 0 0 1px rgba(247,241,228,0.3);
+  }
+
+  @keyframes taiji-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .brand-title {
+    font-family: "KaiTi", "STKaiti", "Songti SC", serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #1a1410;
+    letter-spacing: 0.05em;
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+
+  .brand-tagline {
+    font-size: 14px;
+    color: #8a735a;
+    letter-spacing: 0.12em;
+    line-height: 1.8;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .brand-tagline .divider {
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: rgba(138,109,59,0.3);
+    margin: 0 8px;
+    vertical-align: middle;
+  }
+
+  /* --- Entry buttons --- */
+  .entry-section {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .entry-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    height: 64px;
+    border: 1.5px solid rgba(26,20,16,0.15);
+    border-radius: 2px;
+    font-family: "KaiTi", "STKaiti", "Songti SC", serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 300ms ease;
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  .entry-btn.primary {
+    color: #fffaf1;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 40%),
+      #8f2e27;
+    border-color: #8f2e27;
+    box-shadow:
+      0 8px 32px rgba(143,46,39,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+
+  .entry-btn.primary::after {
+    position: absolute;
+    inset: 4px;
+    content: "";
+    border: 1px solid rgba(255,250,241,0.15);
+    border-radius: 1px;
+    pointer-events: none;
+  }
+
+  .entry-btn.secondary {
+    color: #1a1410;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 40%),
+      rgba(247,241,228,0.6);
+    box-shadow:
+      0 4px 20px rgba(26,20,16,0.06),
+      inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+
+  .entry-btn.secondary::after {
+    position: absolute;
+    inset: 4px;
+    content: "";
+    border: 1px solid rgba(26,20,16,0.06);
+    border-radius: 1px;
+    pointer-events: none;
+  }
+
+  .entry-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .entry-btn.primary:hover {
+    box-shadow: 0 12px 40px rgba(143,46,39,0.28);
+  }
+
+  .entry-btn.secondary:hover {
+    box-shadow: 0 8px 28px rgba(26,20,16,0.1);
+  }
+
+  .entry-btn .btn-icon {
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .entry-btn .btn-desc {
+    display: block;
+    font-family: "Noto Serif SC", "STSong", serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    opacity: 0.65;
+  }
+
+  /* --- Footer note --- */
+  .page-footer {
+    position: relative;
+    z-index: 1;
+    margin-top: 64px;
+    text-align: center;
+  }
+
+  .page-footer p {
+    font-size: 11px;
+    color: #b8a48e;
+    letter-spacing: 0.08em;
+    line-height: 2;
+  }
+
+  /* --- Vertical brush line decoration --- */
+  .brush-line {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(138,109,59,0.12) 20%,
+      rgba(138,109,59,0.12) 80%,
+      transparent 100%
+    );
+  }
+
+  .brush-line.left  { left: 40px; top: 0; bottom: 0; }
+  .brush-line.right { right: 40px; top: 0; bottom: 0; }
+
+  @media (max-width: 480px) {
+    .page { padding: 60px 28px 50px; }
+    .brand-title { font-size: 32px; }
+    .taiji { width: 80px; height: 80px; }
+    .entry-btn { height: 58px; font-size: 20px; }
+    .brush-line.left { left: 22px; }
+    .brush-line.right { right: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="paper-ground"></div>
+<div class="ink-splash top-right"></div>
+<div class="ink-splash bottom-left"></div>
+<div class="ink-dot d1"></div>
+<div class="ink-dot d2"></div>
+<div class="ink-dot d3"></div>
+<div class="ink-dot d4"></div>
+<div class="brush-line left"></div>
+<div class="brush-line right"></div>
+
+<div class="page">
+  <!-- Brand -->
+  <div class="brand-block">
+    <div class="brand-mark">
+      <div class="taiji"></div>
+    </div>
+    <h1 class="brand-title">AI 国学助手</h1>
+    <p class="brand-tagline">
+      以古人之智慧<span class="divider"></span>照见今日之心
+    </p>
+  </div>
+
+  <!-- Entry Points -->
+  <div class="entry-section">
+    <a class="entry-btn primary">
+      <span class="btn-icon">签</span>
+      <span>
+        今日一签
+        <span class="btn-desc">每日一签 · AI解签</span>
+      </span>
+    </a>
+
+    <a class="entry-btn secondary">
+      <span class="btn-icon">五</span>
+      <span>
+        五行画像
+        <span class="btn-desc">观其五行 · 知已知彼</span>
+      </span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <p>传统文化解读与自我观察<br>不预测未来，不承诺结果</p>
+  </div>
+</div>
+
+</body>
+</html>

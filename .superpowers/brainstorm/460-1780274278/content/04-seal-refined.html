@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方案A精修 · 篆刻印章风</title>
+<style>
+  :root {
+    --paper: #f7f1e4; --ink: #1a1410; --vermilion: #8f2e27;
+    --gold: #8a6d3b; --cream: #faf6ed; --border: rgba(61,48,34,0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Noto Serif SC", "STSong", "Songti SC", "KaiTi", serif;
+    background: #ede4d5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+
+  /* ============================================ */
+  /* PHONE FRAME                                  */
+  /* ============================================ */
+  .phone-frame {
+    width: 420px;
+    min-height: 760px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(26,20,16,0.08);
+    box-shadow:
+      0 0 0 8px #2a2520,
+      0 0 0 10px #3a3530,
+      0 20px 60px rgba(26,20,16,0.3);
+  }
+
+  /* ============================================ */
+  /* PAPER GROUND                                 */
+  /* ============================================ */
+  .paper-ground {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      /* fiber texture */
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139,119,90,0.018) 2px, rgba(139,119,90,0.018) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 38px, rgba(139,119,90,0.012) 38px, rgba(139,119,90,0.012) 39px),
+      /* warm tone */
+      linear-gradient(175deg, #f9f3e7 0%, #f3ebdb 40%, #f7f1e4 100%);
+  }
+
+  /* aged edge vignette */
+  .paper-ground::before {
+    position: absolute; inset: 0; content: "";
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(139,119,90,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(139,119,90,0.04) 0%, transparent 50%);
+  }
+
+  /* ============================================ */
+  /* INK DETAILS                                  */
+  /* ============================================ */
+  .ink-wash {
+    position: absolute; pointer-events: none; z-index: 0;
+  }
+  /* Top-right ink wash — subtle */
+  .ink-wash.tr {
+    right: -20px; top: 40px;
+    width: 160px; height: 120px;
+    background: radial-gradient(ellipse at 50% 30%, rgba(26,20,16,0.045) 0%, transparent 70%);
+    border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+    transform: rotate(-12deg);
+    filter: blur(6px);
+  }
+  /* Bottom-left ink wash — very faint */
+  .ink-wash.bl {
+    left: -30px; bottom: 100px;
+    width: 180px; height: 100px;
+    background: radial-gradient(ellipse at 50% 60%, rgba(26,20,16,0.035) 0%, transparent 70%);
+    border-radius: 55% 45% 60% 40% / 45% 55% 40% 60%;
+    transform: rotate(15deg);
+    filter: blur(8px);
+  }
+  /* Single ink dot — like a stray brush drop */
+  .ink-drop {
+    position: absolute; pointer-events: none; z-index: 0;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(26,20,16,0.08);
+    right: 55px; top: 240px;
+  }
+  .ink-drop::after {
+    content: ""; position: absolute;
+    width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(26,20,16,0.05);
+    left: 14px; top: -3px;
+  }
+
+  /* ============================================ */
+  /* PAGE CONTENT                                 */
+  /* ============================================ */
+  .page {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    height: 100%; min-height: 760px;
+    padding: 80px 36px 56px;
+  }
+
+  /* ---- SEAL MARK (REFINED) ---- */
+  .seal-wrapper {
+    position: relative;
+    margin-bottom: 40px;
+  }
+
+  .seal {
+    width: 112px; height: 112px;
+    display: grid; place-items: center;
+    position: relative;
+    background: rgba(143,46,39,0.025);
+    filter: url(#rough-edge);
+  }
+
+  /* Irregular border using multiple box-shadows for hand-cut feel */
+  .seal-border {
+    position: absolute; inset: 0;
+    border: 3px solid #8f2e27;
+    /* simulate uneven ink application */
+    box-shadow:
+      inset 0 0 0 2px rgba(143,46,39,0.04),
+      0 0 0 0.5px rgba(143,46,39,0.3);
+    /* subtle texture using border-image concept via pseudo */
+  }
+
+  /* Inner line — slightly offset to feel hand-drawn */
+  .seal-border::after {
+    position: absolute;
+    inset: 7px;
+    content: "";
+    border: 1.2px solid rgba(143,46,39,0.3);
+  }
+
+  /* Corner accents — like carved seal corners */
+  .seal-corner {
+    position: absolute;
+    width: 16px; height: 16px;
+    border-color: #8f2e27;
+    border-style: solid;
+    opacity: 0.7;
+  }
+  .seal-corner.tl { top: -2px; left: -2px; border-width: 3px 0 0 3px; }
+  .seal-corner.tr { top: -2px; right: -2px; border-width: 3px 3px 0 0; }
+  .seal-corner.bl { bottom: -2px; left: -2px; border-width: 0 0 3px 3px; }
+  .seal-corner.br { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; }
+
+  /* The seal character */
+  .seal-char {
+    font-family: "KaiTi", "STKaiti", "SimKai", serif;
+    font-size: 54px;
+    font-weight: 900;
+    color: #8f2e27;
+    line-height: 1;
+    /* Slight off-rotation for hand-stamped feel */
+    transform: rotate(-1deg);
+    /* Simulate ink bleed */
+    text-shadow:
+      0.5px 0.5px 0 rgba(143,46,39,0.4),
+      -0.5px -0.5px 0 rgba(143,46,39,0.2);
+    /* Slight opacity variation like real ink */
+    opacity: 0.92;
+  }
+
+  /* Subtle ink smudge beside seal */
+  .seal-smudge {
+    position: absolute;
+    right: -8px; bottom: 10px;
+    width: 14px; height: 10px;
+    background: radial-gradient(ellipse, rgba(143,46,39,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(2px);
+  }
+
+  /* ============================================ */
+  /* TYPOGRAPHY (REFINED HIERARCHY)               */
+  /* ============================================ */
+  .brand-title {
+    font-family: "KaiTi", "STKaiti", "Songti SC", serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #1a1410;
+    letter-spacing: 0.07em;
+    line-height: 1.2;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .brand-subtitle {
+    font-size: 13px;
+    color: #8a735a;
+    letter-spacing: 0.12em;
+    line-height: 1.8;
+    text-align: center;
+    margin-bottom: 56px;
+    max-width: 260px;
+  }
+
+  .brand-subtitle .dot {
+    display: inline-block;
+    width: 3px; height: 3px;
+    background: rgba(138,109,59,0.3);
+    border-radius: 50%;
+    margin: 0 10px;
+    vertical-align: middle;
+  }
+
+  /* ============================================ */
+  /* ENTRY BUTTONS (SEAL STYLE)                   */
+  /* ============================================ */
+  .btn-area {
+    width: 100%; max-width: 300px;
+    display: flex; flex-direction: column;
+    gap: 18px;
+  }
+
+  .entry-btn {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px;
+    width: 100%; height: 62px;
+    border-radius: 2px;
+    font-family: "KaiTi", "STKaiti", "Songti SC", serif;
+    font-size: 21px; font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 280ms ease;
+  }
+
+  /* Primary — vermilion seal style */
+  .entry-btn.primary {
+    color: #fffaf1;
+    border: 1.5px solid #8f2e27;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 40%),
+      #8f2e27;
+    box-shadow:
+      0 8px 28px rgba(143,46,39,0.16),
+      inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  .entry-btn.primary::after {
+    position: absolute; inset: 4px; content: "";
+    border: 1px solid rgba(255,250,241,0.1);
+    border-radius: 1px; pointer-events: none;
+  }
+
+  /* Secondary — un-inked seal */
+  .entry-btn.secondary {
+    color: #1a1410;
+    border: 1.5px solid rgba(26,20,16,0.13);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.35) 0%, transparent 40%),
+      rgba(247,241,228,0.5);
+    box-shadow:
+      0 4px 16px rgba(26,20,16,0.04),
+      inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .entry-btn.secondary::after {
+    position: absolute; inset: 4px; content: "";
+    border: 1px solid rgba(26,20,16,0.05);
+    border-radius: 1px; pointer-events: none;
+  }
+
+  .entry-btn:hover { transform: translateY(-1px); }
+  .entry-btn.primary:hover { box-shadow: 0 12px 36px rgba(143,46,39,0.24); }
+  .entry-btn.secondary:hover { box-shadow: 0 8px 24px rgba(26,20,16,0.08); }
+
+  .btn-icon {
+    font-size: 24px; line-height: 1;
+  }
+  .btn-label {
+    display: flex; flex-direction: column; align-items: flex-start;
+  }
+  .btn-desc {
+    font-family: "Noto Serif SC", "STSong", serif;
+    font-size: 10px; font-weight: 400;
+    letter-spacing: 0.06em; opacity: 0.55;
+  }
+
+  /* ============================================ */
+  /* FOOTER                                       */
+  /* ============================================ */
+  .page-footer {
+    margin-top: 48px;
+    text-align: center;
+  }
+  .page-footer p {
+    font-size: 11px;
+    color: #b8a48e;
+    letter-spacing: 0.07em;
+    line-height: 2;
+  }
+
+  /* SVG filter for rough seal edges (subtle) */
+  .sr-only { position: absolute; width: 0; height: 0; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<!-- SVG filter for subtle roughness — only applied lightly -->
+<svg class="sr-only">
+  <filter id="rough-edge">
+    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
+<div class="phone-frame">
+
+  <div class="paper-ground"></div>
+  <div class="ink-wash tr"></div>
+  <div class="ink-wash bl"></div>
+  <div class="ink-drop"></div>
+
+  <div class="page">
+
+    <!-- SEAL LOGO (REFINED) -->
+    <div class="seal-wrapper">
+      <div class="seal">
+        <div class="seal-border"></div>
+        <div class="seal-corner tl"></div>
+        <div class="seal-corner tr"></div>
+        <div class="seal-corner bl"></div>
+        <div class="seal-corner br"></div>
+        <span class="seal-char">易</span>
+      </div>
+      <div class="seal-smudge"></div>
+    </div>
+
+    <!-- BRAND (REFINED HIERARCHY) -->
+    <h1 class="brand-title">国学助手</h1>
+    <p class="brand-subtitle">
+      传统文化<span class="dot"></span>AI解读<span class="dot"></span>自我观察
+    </p>
+
+    <!-- ENTRY BUTTONS -->
+    <div class="btn-area">
+      <div class="entry-btn primary">
+        <span class="btn-icon">签</span>
+        <span class="btn-label">
+          今日一签
+          <span class="btn-desc">每日一签 · AI解签</span>
+        </span>
+      </div>
+
+      <div class="entry-btn secondary">
+        <span class="btn-icon">五</span>
+        <span class="btn-label">
+          五行画像
+          <span class="btn-desc">观其五行 · 知己知彼</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="page-footer">
+      <p>传统文化解读与自我观察<br>不预测未来，不承诺结果</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

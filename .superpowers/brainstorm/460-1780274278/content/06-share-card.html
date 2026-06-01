@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五行分享卡片 · 原型</title>
+<style>
+  :root {
+    --paper: #f7f1e4; --ink: #1a1410; --vermilion: #8f2e27;
+    --gold: #8a6d3b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Noto Serif SC", "STSong", "Songti SC", "KaiTi", serif;
+    background: #ede4d5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    color: var(--ink);
+  }
+
+  .layout {
+    display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1000px;
+  }
+
+  /* ---- CONTEXT COLUMN ---- */
+  .context {
+    flex: 0 0 280px;
+  }
+  .context h2 {
+    font-family: "KaiTi","STKaiti",serif;
+    font-size: 28px; margin-bottom: 12px; letter-spacing: 0.06em;
+  }
+  .context p {
+    font-size: 13px; color: #8a735a; line-height: 1.9;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---- SHARE CARD ---- */
+  .share-card {
+    width: 360px;
+    aspect-ratio: 3 / 4; /* portrait, WeChat friendly */
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(26,20,16,0.18);
+  }
+
+  .card-paper {
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139,119,90,0.02) 2px, rgba(139,119,90,0.02) 4px),
+      linear-gradient(175deg, #f9f3e7 0%, #f3ebdb 40%, #f7f1e4 100%);
+  }
+
+  /* Vignette on card */
+  .card-paper::before {
+    position: absolute; inset: 0; content: "";
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(139,119,90,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(139,119,90,0.03) 0%, transparent 50%);
+  }
+
+  .card-inner {
+    position: relative; z-index: 1;
+    height: 100%; display: flex; flex-direction: column;
+    align-items: center; padding: 40px 32px 32px;
+  }
+
+  /* ---- Card: small seal branding top ---- */
+  .card-brand {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .mini-seal {
+    width: 28px; height: 28px;
+    display: grid; place-items: center;
+    border: 1.5px solid #8f2e27;
+    background: rgba(143,46,39,0.03);
+    position: relative;
+  }
+  .mini-seal::after {
+    position: absolute; inset: 3px; content: "";
+    border: 0.5px solid rgba(143,46,39,0.2);
+  }
+  .mini-seal span {
+    font-family: "KaiTi","STKaiti",serif;
+    font-size: 16px; font-weight: 900; color: #8f2e27;
+    opacity: 0.9;
+  }
+  .brand-name {
+    font-family: "KaiTi","STKaiti",serif;
+    font-size: 13px; color: #675744;
+    letter-spacing: 0.06em; font-weight: 600;
+  }
+
+  /* ---- Card: dominant element hero ---- */
+  .card-char {
+    font-family: "KaiTi","STKaiti","SimKai",serif;
+    font-size: 100px;
+    font-weight: 900;
+    line-height: 1;
+    color: #8f2e27;
+    opacity: 0.88;
+    text-shadow:
+      1px 1px 0 rgba(143,46,39,0.12),
+      -0.5px -0.5px 0 rgba(143,46,39,0.06);
+    margin: 20px 0 4px;
+  }
+  .card-element-name {
+    font-family: "KaiTi","STKaiti",serif;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #1a1410;
+  }
+  .card-element-trait {
+    font-size: 12px; color: #8a735a;
+    letter-spacing: 0.08em; margin-top: 2px;
+  }
+
+  /* ---- Card: simplified element strip ---- */
+  .card-strip {
+    width: 100%;
+    display: flex; gap: 6px;
+    margin: 24px 0 18px;
+  }
+  .card-segment {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 3px;
+  }
+  .card-segment-bar {
+    width: 100%; border-radius: 1px;
+    transition: height 600ms ease;
+  }
+  .card-segment-bar.wood  { background: #5a8a5a; height: 24px; }
+  .card-segment-bar.fire  { background: #c94a3a; height: 48px; }
+  .card-segment-bar.earth { background: #b8923e; height: 32px; }
+  .card-segment-bar.metal { background: #8a8a8a; height: 8px; }
+  .card-segment-bar.water { background: #3a6f8a; height: 8px; }
+  .card-segment-label {
+    font-size: 10px; color: #675744;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---- Card: summary quote ---- */
+  .card-summary {
+    text-align: center;
+    font-size: 13px; color: #675744;
+    line-height: 1.8; letter-spacing: 0.05em;
+    max-width: 260px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(61,48,34,0.08);
+    border-bottom: 1px solid rgba(61,48,34,0.08);
+  }
+  .card-summary em {
+    font-style: normal; color: #8f2e27; font-weight: 600;
+  }
+
+  /* ---- Card: footer ---- */
+  .card-footer {
+    margin-top: auto;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .card-footer-text {
+    font-size: 10px; color: #b8a48e;
+    letter-spacing: 0.06em; line-height: 1.6;
+  }
+  .card-footer .divider {
+    width: 1px; height: 20px;
+    background: rgba(61,48,34,0.1);
+  }
+
+  /* ---- PREVIEW CONTEXT ---- */
+  .preview-label {
+    font-size: 11px; color: #8a735a;
+    letter-spacing: 0.1em; margin-bottom: 12px;
+  }
+
+  /* ---- VARIANT CARDS ---- */
+  .variant-cards {
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Context text -->
+  <div class="context">
+    <h2>五行分享卡片</h2>
+    <p>
+      用户完成分析后，点击"分享画像"生成此卡片。<br><br>
+      适用于朋友圈、微信群。<br><br>
+      设计定位：<strong>个人画像卡</strong>，而非产品海报。<br><br>
+      用户分享的是"我的五行画像"，不是"AI国学助手广告"。
+    </p>
+  </div>
+
+  <!-- Share card preview -->
+  <div>
+    <p class="preview-label">分享卡片预览</p>
+    <div class="share-card">
+      <div class="card-paper"></div>
+      <div class="card-inner">
+
+        <!-- Mini brand seal -->
+        <div class="card-brand">
+          <div class="mini-seal"><span>易</span></div>
+          <span class="brand-name">国学助手</span>
+        </div>
+
+        <!-- Dominant element -->
+        <span class="card-char">火</span>
+        <div class="card-element-name">火 · 离明</div>
+        <div class="card-element-trait">表达 · 热情 · 行动</div>
+
+        <!-- Simplified element distribution -->
+        <div class="card-strip">
+          <div class="card-segment">
+            <div class="card-segment-bar wood"></div>
+            <span class="card-segment-label">木 20</span>
+          </div>
+          <div class="card-segment">
+            <div class="card-segment-bar fire"></div>
+            <span class="card-segment-label">火 41</span>
+          </div>
+          <div class="card-segment">
+            <div class="card-segment-bar earth"></div>
+            <span class="card-segment-label">土 27</span>
+          </div>
+          <div class="card-segment">
+            <div class="card-segment-bar metal"></div>
+            <span class="card-segment-label">金 6</span>
+          </div>
+          <div class="card-segment">
+            <div class="card-segment-bar water"></div>
+            <span class="card-segment-label">水 6</span>
+          </div>
+        </div>
+
+        <!-- Cultural summary -->
+        <p class="card-summary">
+          火气较显，金气较轻。<br>
+          <em>热情为灯，也需要静水深流。</em>
+        </p>
+
+        <!-- Footer -->
+        <div class="card-footer">
+          <span class="card-footer-text">传统文化解读与自我观察<br>不预测未来，不承诺结果</span>
+          <span class="divider"></span>
+          <span class="card-footer-text">AI 国学助手</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<h2>产品架构 & 用户路径</h2>
+<p class="subtitle">从"功能 Demo"升级为"可展示产品"，先看全局结构</p>
+
+<div class="section">
+  <h3>页面结构</h3>
+</div>
+
+<div class="mockup">
+  <div class="mockup-header">页面层级树</div>
+  <div class="mockup-body">
+    <div style="font-family: 'KaiTi', 'STKaiti', serif; padding: 20px;">
+      <div style="text-align: center; padding: 14px; border: 1px solid #8f2e27; border-radius: 6px; margin-bottom: 12px; background: rgba(143,46,39,0.06); color: #8f2e27; font-size: 18px; font-weight: 700;">
+        首页 → 入口
+      </div>
+      <div style="display: flex; gap: 16px; justify-content: center;">
+        <div style="flex: 1; text-align: center; padding: 16px; border: 1px solid rgba(61,48,34,0.2); border-radius: 6px; background: rgba(255,253,247,0.8);">
+          <div style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">今日一签</div>
+          <div style="font-size: 13px; color: #675744;">抽签 → 查看签文 → AI解签</div>
+        </div>
+        <div style="flex: 1; text-align: center; padding: 16px; border: 1px solid rgba(61,48,34,0.2); border-radius: 6px; background: rgba(255,253,247,0.8);">
+          <div style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">五行画像</div>
+          <div style="font-size: 13px; color: #675744;">输入生日 → 雷达图 → AI解读</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>用户动线</h3>
+</div>
+
+<div class="mockup">
+  <div class="mockup-header">核心路径</div>
+  <div class="mockup-body">
+    <div style="font-family: 'KaiTi', 'STKaiti', serif; padding: 24px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #8f2e27; color: #fffaf1; display: grid; place-items: center; font-size: 14px; font-weight: 700;">1</div>
+        <div style="flex: 1; padding: 10px 16px; border: 1px solid rgba(61,48,34,0.14); border-radius: 6px; background: rgba(255,253,247,0.8);">
+          <strong>首页</strong> — 看到"今日一签"和"五行画像"两个入口，了解产品定位
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #8f2e27; color: #fffaf1; display: grid; place-items: center; font-size: 14px; font-weight: 700;">2</div>
+        <div style="flex: 1; padding: 10px 16px; border: 1px solid rgba(61,48,34,0.14); border-radius: 6px; background: rgba(255,253,247,0.8);">
+          <strong>进入功能页</strong> — 抽签或填生日，获得结果
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #8f2e27; color: #fffaf1; display: grid; place-items: center; font-size: 14px; font-weight: 700;">3</div>
+        <div style="flex: 1; padding: 10px 16px; border: 1px solid rgba(61,48,34,0.14); border-radius: 6px; background: rgba(255,253,247,0.8);">
+          <strong>AI解读</strong> — 阅读长文解读，可收藏或分享
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>关键设计决策点</h3>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>首页即入口 + 底部导航切换</h3>
+      <p>首页展示两个功能入口，进入后通过底部导航在"首页/一签/五行"之间切换。类似微信"发现"页。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>首页滚动叙事 + 锚点直达</h3>
+      <p>首页是一张长卷，自上而下讲述"一签→五行→关于"，点击锚点也可直接跳转。适合移动端沉浸浏览。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>首页双入口 + 返回首页按钮</h3>
+      <p>保留当前 tab 切换结构，但增加一个有仪式感的首页作为 landing page。每个功能页左上角有"← 返回"回到首页。改动最小。</p>
+    </div>
+  </div>
+</div>
