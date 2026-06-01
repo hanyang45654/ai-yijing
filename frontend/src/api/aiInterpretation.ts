@@ -4,7 +4,7 @@ export type InterpretSignResponse = {
   note: string;
 };
 
-const API_BASE_URL = "/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/v1";
 
 export async function interpretSign(signId: number): Promise<InterpretSignResponse> {
   const response = await fetch(`${API_BASE_URL}/ai/interpret-sign`, {

@@ -1,11 +1,13 @@
+import os
 from collections.abc import Generator
 from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
-ROOT_DIR = Path(__file__).resolve().parents[3]
-DATABASE_PATH = ROOT_DIR / "ai_yijing.db"
+DATA_DIR = Path(os.getenv("DATA_DIR", Path(__file__).resolve().parents[3]))
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+DATABASE_PATH = DATA_DIR / "ai_yijing.db"
 DATABASE_URL = f"sqlite:///{DATABASE_PATH.as_posix()}"
 
 
