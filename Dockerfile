@@ -16,7 +16,6 @@ COPY backend/ .
 
 # Railway injects $PORT; default 8000 for local
 ENV DATA_DIR=/data
-VOLUME /data
 
 EXPOSE 8000
 
