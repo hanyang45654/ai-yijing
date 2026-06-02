@@ -181,13 +181,20 @@ npm run dev
 
 ### Railway（后端）
 
+项目根目录包含 `Dockerfile`，Railway 会自动检测并使用它构建镜像。
+
 1. 在 [Railway](https://railway.app) 创建项目，关联 GitHub 仓库
 2. 配置环境变量：
-   - `DEEPSEEK_API_KEY` — DeepSeek API Key
-   - `CORS_ORIGINS` — Vercel 前端域名（如 `https://yi-jing.vercel.app`）
-   - `DATA_DIR` — `/data`
-3. Railway 自动读取 `railway.json` 完成构建与启动
-4. 服务自动建表，无需手动迁移
+
+   | 变量名 | 值 | 说明 |
+   |--------|-----|------|
+   | `DEEPSEEK_API_KEY` | `sk-xxx` | DeepSeek API Key |
+   | `CORS_ORIGINS` | `https://yi-jing.vercel.app` | Vercel 前端域名 |
+   | `DATA_DIR` | `/data` | SQLite 持久化路径 |
+
+3. Railway 自动构建 Docker 镜像并启动，无需额外配置
+4. 服务启动时自动建表，无需手动迁移
+5. 在 Railway Dashboard 挂载 Volume（路径 `/data`）确保持久化
 
 ### Vercel（前端）
 
