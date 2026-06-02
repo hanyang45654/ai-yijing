@@ -1,3 +1,5 @@
+import { fetchWithAuth } from "./fetchWithAuth";
+
 export type DailySign = {
   id: number;
   sign_no: number;
@@ -15,10 +17,8 @@ export type TodaySignResponse = {
   note: string;
 };
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/v1";
-
 export async function drawTodaySign(userKey: string): Promise<TodaySignResponse> {
-  const response = await fetch(`${API_BASE_URL}/daily-signs/draw`, {
+  const response = await fetchWithAuth("/daily-signs/draw", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

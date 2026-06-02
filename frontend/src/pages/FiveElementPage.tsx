@@ -9,6 +9,7 @@ import {
 import { FiveElementRadar } from "../components/FiveElementRadar";
 import { MarkdownView } from "../components/MarkdownView";
 import { ShareCard } from "../components/ShareCard";
+import { HistoryPanel } from "./HistoryPanel";
 
 const ELEMENT_WASH: Record<ElementKey, string> = {
   wood: "rgba(74,124,89,0.07)",
@@ -69,6 +70,7 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState<Gender>("unspecified");
   const [mbti, setMbti] = useState<MbtiType | "">("");
+  const [view, setView] = useState<"form" | "result" | "history">("form");
   const [result, setResult] = useState<FiveElementAnalyzeResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -87,6 +89,7 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
     try {
       const data = await analyzeFiveElements(birthDate, gender, mbti || undefined);
       setResult(data);
+      setView("result");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "画像生成失败，请稍后再试"
@@ -203,10 +206,19 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
           ← 首页
         </button>
         <span className="nav-title">易境画像</span>
-        <span className="nav-empty" />
+        <button
+          className="nav-history-btn"
+          onClick={() => { setView("history"); setError(""); }}
+        >
+          历史
+        </button>
       </nav>
 
-      {!result ? (
+      {view === "history" && (
+        <HistoryPanel onViewResult={(r) => { setResult(r); setView("result"); }} />
+      )}
+
+      {view === "form" && (
         <form className="five-form" onSubmit={handleSubmit}>
           <label className="field-block">
             <span>出生日期</span>
@@ -264,7 +276,9 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
             仅作传统文化解读与自我观察，不用于预测未来。
           </p>
         </form>
-      ) : (
+      )}
+
+      {view === "result" && result && (
         <>
           {/* Dominant Element Hero */}
           <section className="element-hero">

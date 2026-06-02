@@ -26,6 +26,11 @@ class Settings:
         )
     )
     deepseek_model: str = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
+    secret_key: str = os.getenv("JWT_SECRET", "yi-jing-dev-secret-change-in-production")
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = int(
+        os.getenv("JWT_EXPIRE_MINUTES", "1440")
+    )
 
 
 settings = Settings()

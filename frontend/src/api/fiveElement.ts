@@ -1,3 +1,5 @@
+import { fetchWithAuth } from "./fetchWithAuth";
+
 export type Gender = "male" | "female" | "other" | "unspecified";
 export type ElementKey = "wood" | "fire" | "earth" | "metal" | "water";
 export type MbtiType =
@@ -43,23 +45,28 @@ export type FiveElementAnalyzeResponse = {
   note: string;
 };
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/v1";
+export type FiveElementRecordItem = {
+  id: number;
+  birth_date: string;
+  gender: Gender;
+  mbti_type: MbtiType | null;
+  dominant_key: ElementKey;
+  dominant_name: string;
+  created_at: string;
+};
 
 export async function analyzeFiveElements(
   birthDate: string,
   gender: Gender,
   mbtiType?: MbtiType
 ): Promise<FiveElementAnalyzeResponse> {
-  const response = await fetch(`${API_BASE_URL}/five-elements/analyze`, {
+  const response = await fetchWithAuth("/five-elements/analyze", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
     body: JSON.stringify({
       birth_date: birthDate,
       gender,
       mbti_type: mbtiType ?? null,
-    })
+    }),
   });
 
   if (!response.ok) {
@@ -68,4 +75,32 @@ export async function analyzeFiveElements(
   }
 
   return response.json();
+}
+
+export async function fetchRecords(): Promise<FiveElementRecordItem[]> {
+  const response = await fetchWithAuth("/five-elements/records");
+  if (!response.ok) {
+    const data = await response.json().catch(() => null);
+    throw new Error(data?.detail || "获取历史记录失败");
+  }
+  return response.json();
+}
+
+export async function fetchRecordById(id: number): Promise<FiveElementAnalyzeResponse> {
+  const response = await fetchWithAuth(`/five-elements/records/${id}`);
+  if (!response.ok) {
+    const data = await response.json().catch(() => null);
+    throw new Error(data?.detail || "获取记录详情失败");
+  }
+  return response.json();
+}
+
+export async function deleteRecord(id: number): Promise<void> {
+  const response = await fetchWithAuth(`/five-elements/records/${id}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    const data = await response.json().catch(() => null);
+    throw new Error(data?.detail || "删除记录失败");
+  }
 }

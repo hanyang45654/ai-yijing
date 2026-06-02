@@ -53,4 +53,5 @@ class FiveElementAnalyzeResponse(BaseModel):
     ai_markdown: str
     fusion_markdown: Optional[str] = None
     personality_tag: Optional[PersonalityTag] = None
+    record_id: Optional[int] = None
     note: str = "以下内容为传统五行理论角度的文化解读与自我观察，不代表现实预测。"

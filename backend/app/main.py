@@ -25,8 +25,26 @@ app.include_router(api_router)
 
 @app.on_event("startup")
 def on_startup() -> None:
-    from app.db.session import Base, engine
+    from app.db.session import Base, SessionLocal, engine
     Base.metadata.create_all(bind=engine)
+
+    from passlib.context import CryptContext
+
+    from app.models.user import User
+
+    db = SessionLocal()
+    try:
+        if not db.query(User).first():
+            pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+            admin = User(
+                username="admin",
+                password_hash=pwd.hash("admin123"),
+                role="admin",
+            )
+            db.add(admin)
+            db.commit()
+    finally:
+        db.close()
 
 
 @app.get("/health")
