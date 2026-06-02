@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80">
+  <title>AI易经 — Wordmark Only</title>
+  <g fill="#1a1a2e">
+    <!-- AI — bold, tech-forward -->
+    <text x="10" y="48" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+          font-size="34" font-weight="700" letter-spacing="2">
+      AI
+    </text>
+    <!-- Divider — subtle dot -->
+    <circle cx="68" cy="42" r="3" fill="#1a1a2e" opacity="0.35" />
+    <!-- 易经 — clean, refined Chinese typography -->
+    <text x="82" y="48" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif"
+          font-size="30" font-weight="300" letter-spacing="6">
+      易经
+    </text>
+  </g>
+</svg>

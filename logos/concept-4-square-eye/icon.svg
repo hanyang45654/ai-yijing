@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <title>矩眼 — Square Eye / Insight Frame</title>
+  <!--
+    Concept 4: 矩眼 (Square Eye)
+    A rounded square (app-icon native shape) frames an inner lens/eye.
+    Square = 方 (earth, the material world, "方寸之间" inner space).
+    Inner lens = the eye of insight, AI's focused perception.
+    The interplay of outer frame and inner form creates depth.
+  -->
+  <!-- Outer frame — rounded square, app-icon shape -->
+  <rect x="25" y="25" width="150" height="150" rx="36"
+        fill="none" stroke="#1a1a2e" stroke-width="10" />
+  <!-- Inner eye / lens — horizontal almond shape -->
+  <path d="M60 100
+           Q100 70, 140 100
+           Q100 130, 60 100 Z"
+        fill="#1a1a2e" />
+  <!-- Pupil / focal point — the AI's sharp insight -->
+  <circle cx="100" cy="100" r="12" fill="#ffffff" />
+</svg>

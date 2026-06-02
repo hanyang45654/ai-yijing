@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 100" width="340" height="100">
+  <title>圆明 — Horizontal Lockup (Icon + Wordmark)</title>
+  <!-- Icon: Luminous Circle -->
+  <g transform="translate(10, 10)">
+    <circle cx="40" cy="40" r="34"
+            fill="none" stroke="#1a1a2e" stroke-width="6"
+            stroke-dasharray="190 24"
+            stroke-dashoffset="22"
+            stroke-linecap="round" />
+    <circle cx="77" cy="16" r="3.5" fill="#1a1a2e" />
+  </g>
+  <!-- Wordmark -->
+  <g fill="#1a1a2e">
+    <text x="95" y="46" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+          font-size="26" font-weight="700" letter-spacing="2">
+      AI
+    </text>
+    <text x="146" y="46" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif"
+          font-size="26" font-weight="400" letter-spacing="4">
+      易经
+    </text>
+    <!-- Subtle divider dot -->
+    <circle cx="140" cy="40" r="2.5" fill="#1a1a2e" opacity="0.4" />
+  </g>
+</svg>

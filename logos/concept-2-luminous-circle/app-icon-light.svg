@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <title>圆明 — App Icon Mockup (Light Background)</title>
+  <defs>
+    <clipPath id="ios-mask-light">
+      <rect x="0" y="0" width="200" height="200" rx="42" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#ios-mask-light)">
+    <rect x="0" y="0" width="200" height="200" fill="#f8f7f4" />
+    <!-- Luminous Circle — dark on light -->
+    <circle cx="100" cy="100" r="68"
+            fill="none" stroke="#1a1a2e" stroke-width="11"
+            stroke-dasharray="382 46"
+            stroke-dashoffset="44"
+            stroke-linecap="round" />
+    <circle cx="157" cy="53" r="6" fill="#1a1a2e" />
+  </g>
+</svg>

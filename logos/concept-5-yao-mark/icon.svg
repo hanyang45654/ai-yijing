@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <title>易爻 — Yao Mark / Seal of Change</title>
+  <!--
+    Concept 5: 易爻 (Yao Mark)
+    Circle = cosmos, unity, 太极.
+    Three lines = 天地人 (Heaven, Earth, Human / 三才).
+    Middle line is broken = humanity/AI awakening, the pivot between heaven and earth.
+    Overall impression: a modern seal/chop mark, mysterious and minimal.
+  -->
+  <!-- Outer circle — thin, elegant -->
+  <circle cx="100" cy="100" r="78"
+          fill="none" stroke="#1a1a2e" stroke-width="5" />
+  <!-- Heaven — solid line (top) -->
+  <rect x="45" y="62" width="110" height="8" rx="4" fill="#1a1a2e" />
+  <!-- Human/AI — broken line (middle), the awakening -->
+  <rect x="45" y="96" width="42" height="8" rx="4" fill="#1a1a2e" />
+  <rect x="113" y="96" width="42" height="8" rx="4" fill="#1a1a2e" />
+  <!-- Earth — solid line (bottom) -->
+  <rect x="45" y="130" width="110" height="8" rx="4" fill="#1a1a2e" />
+</svg>

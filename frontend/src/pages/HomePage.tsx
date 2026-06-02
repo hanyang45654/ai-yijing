@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Logo } from "../components/Logo";
 
 type HomePageProps = {
   onNavigate: (page: "daily-sign" | "five-elements") => void;
@@ -9,15 +10,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
   return (
     <div className="home-page">
-      <div className="seal-wrapper">
-        <div className="brand-seal">
-          <div className="brand-seal-border" />
-          <div className="brand-seal-corner tl" />
-          <div className="brand-seal-corner tr" />
-          <div className="brand-seal-corner bl" />
-          <div className="brand-seal-corner br" />
-          <span className="brand-seal-char">易</span>
-        </div>
+      <div className="home-logo">
+        <Logo variant="icon" />
       </div>
 
       <h1 className="brand-title">易境</h1>

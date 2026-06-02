@@ -42,6 +42,7 @@ export type FiveElementAnalyzeResponse = {
   ai_markdown: string;
   fusion_markdown: string | null;
   personality_tag: PersonalityTag | null;
+  record_id?: number;
   note: string;
 };
 
@@ -103,4 +104,15 @@ export async function deleteRecord(id: number): Promise<void> {
     const data = await response.json().catch(() => null);
     throw new Error(data?.detail || "删除记录失败");
   }
+}
+
+const SHARED_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/v1";
+
+export async function fetchSharedResult(id: number): Promise<FiveElementAnalyzeResponse> {
+  const response = await fetch(`${SHARED_BASE_URL}/shared/result/${id}`);
+  if (!response.ok) {
+    const data = await response.json().catch(() => null);
+    throw new Error(data?.detail || "加载分享结果失败");
+  }
+  return response.json();
 }

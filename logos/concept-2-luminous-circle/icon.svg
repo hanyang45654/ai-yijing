@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <title>圆明 — Luminous Circle</title>
+  <!--
+    Concept 2: 圆明 (Luminous Circle) — RECOMMENDED
+    A near-complete circle with a precise gap at the top-right.
+    Circle = 太极 (Taiji), wholeness, the cycle of wisdom.
+    Gap = AI insight breaking through, the "light" entering.
+    Small gleam near the gap = the spark of understanding.
+  -->
+  <defs>
+    <!-- Using dasharray for a clean circular gap -->
+    <!-- Circumference ≈ 2*π*104 ≈ 440 at r=70, circumference ≈ 2*π*70 = 439.8 -->
+  </defs>
+  <!-- Main circle with gap — circumference = 2*π*70 ≈ 439.8 -->
+  <!-- dasharray: ~390 draw, ~50 gap, offset to place gap at upper-right (~45°) -->
+  <circle cx="100" cy="100" r="70"
+          fill="none" stroke="#1a1a2e" stroke-width="12"
+          stroke-dasharray="392 48"
+          stroke-dashoffset="45"
+          stroke-linecap="round" />
+  <!-- Gleam / spark — AI insight point, placed near the gap entrance -->
+  <circle cx="159" cy="51" r="7" fill="#1a1a2e" />
+</svg>

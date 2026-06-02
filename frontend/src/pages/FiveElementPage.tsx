@@ -7,9 +7,17 @@ import {
   MbtiType,
 } from "../api/fiveElement";
 import { FiveElementRadar } from "../components/FiveElementRadar";
+import { Logo } from "../components/Logo";
 import { MarkdownView } from "../components/MarkdownView";
 import { ShareCard } from "../components/ShareCard";
 import { HistoryPanel } from "./HistoryPanel";
+
+function ensureStr(v: unknown): string {
+  if (typeof v === "string") return v;
+  if (Array.isArray(v)) return v.map((item) => String(item)).join("；");
+  if (v === null || v === undefined) return "";
+  return String(v);
+}
 
 const ELEMENT_WASH: Record<ElementKey, string> = {
   wood: "rgba(74,124,89,0.07)",
@@ -75,6 +83,7 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [savingImage, setSavingImage] = useState(false);
+  const [copied, setCopied] = useState(false);
   const shareCardRef = useRef<HTMLDivElement>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -202,9 +211,12 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
   return (
     <>
       <nav className="result-top-nav">
-        <button className="back-btn" onClick={onBack}>
-          ← 首页
-        </button>
+        <div className="nav-left">
+          <Logo variant="icon-sm" />
+          <button className="back-btn" onClick={onBack}>
+            ← 首页
+          </button>
+        </div>
         <span className="nav-title">易境画像</span>
         <button
           className="nav-history-btn"
@@ -380,26 +392,26 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
                   <span className="tag-divider-ornament-dot" />
                 </div>
                 <p className="tag-explanation">
-                  {result.personality_tag.explanation}
+                  {ensureStr(result.personality_tag.explanation)}
                 </p>
                 <div className="tag-grid">
                   <div className="tag-grid-item">
                     <h4 className="tag-grid-heading strengths-heading">优势</h4>
                     <p className="tag-grid-text">
-                      {result.personality_tag.strengths}
+                      {ensureStr(result.personality_tag.strengths)}
                     </p>
                   </div>
                   <div className="tag-grid-item">
                     <h4 className="tag-grid-heading risks-heading">潜在盲区</h4>
                     <p className="tag-grid-text">
-                      {result.personality_tag.risks}
+                      {ensureStr(result.personality_tag.risks)}
                     </p>
                   </div>
                 </div>
                 <div className="tag-suggestions">
                   <h4 className="tag-grid-heading suggestions-heading">成长建议</h4>
                   <p className="tag-grid-text">
-                    {result.personality_tag.suggestions}
+                    {ensureStr(result.personality_tag.suggestions)}
                   </p>
                 </div>
                 <div className="tag-card-seal">易境 · 人格观察</div>
@@ -438,6 +450,32 @@ export function FiveElementPage({ onBack }: FiveElementPageProps) {
             >
               分享画像
             </button>
+            {result.record_id && (
+              <button
+                className="share-btn link-action"
+                onClick={async () => {
+                  const url = `${window.location.origin}/result?id=${result.record_id}`;
+                  try {
+                    await navigator.clipboard.writeText(url);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  } catch {
+                    // Fallback for non-HTTPS or older browsers
+                    const input = document.createElement("input");
+                    input.value = url;
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(input);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }
+                }}
+                disabled={savingImage}
+              >
+                {copied ? "已复制链接" : "复制分享链接"}
+              </button>
+            )}
           </div>
 
           {/* Offscreen share card for html2canvas */}

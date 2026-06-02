@@ -4,12 +4,22 @@ import { DailySignPage } from "./pages/DailySignPage";
 import { FiveElementPage } from "./pages/FiveElementPage";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
+import { SharedResultPage } from "./pages/SharedResultPage";
 
 type PageKey = "home" | "daily-sign" | "five-elements";
 
 function AppShell() {
   const { user, logout } = useAuth();
   const [activePage, setActivePage] = useState<PageKey>("home");
+
+  // Shared result page — public, no auth required
+  if (window.location.pathname === "/result") {
+    return (
+      <main className="page-shell">
+        <SharedResultPage />
+      </main>
+    );
+  }
 
   if (!user) {
     return <LoginPage />;

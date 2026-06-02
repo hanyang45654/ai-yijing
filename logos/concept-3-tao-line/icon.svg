@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <title>道线 — Tao Line / Wisdom Path</title>
+  <!--
+    Concept 3: 道线 (Tao Line)
+    A single continuous line — circuit trace meets brush stroke.
+    Starts from bottom-left, rises through an elegant curve to top-right.
+    One stroke = 道 (the Way), simplicity, guidance.
+    The bend = the moment of insight, the AI's decision point.
+  -->
+  <path d="M170 160
+           C120 160, 80 120, 80 70
+           C80 50, 60 40, 40 40"
+        fill="none" stroke="#1a1a2e" stroke-width="10"
+        stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Insight node — the decision/reflection point -->
+  <circle cx="80" cy="70" r="6" fill="#1a1a2e" />
+</svg>

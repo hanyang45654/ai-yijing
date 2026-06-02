@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" width="200" height="260">
+  <title>脉 — Vertical Lockup</title>
+  <!-- Icon -->
+  <g fill="#8f2e27">
+    <rect x="44" y="40" width="112" height="8" rx="4" />
+    <rect x="44" y="60" width="112" height="8" rx="4" />
+    <rect x="44" y="80" width="42" height="8" rx="4" />
+    <rect x="114" y="80" width="42" height="8" rx="4" />
+    <rect x="44" y="100" width="112" height="8" rx="4" />
+    <rect x="44" y="120" width="112" height="8" rx="4" />
+    <rect x="44" y="140" width="112" height="8" rx="4" />
+  </g>
+  <!-- Wordmark -->
+  <g text-anchor="middle">
+    <text x="100" y="215" font-family="'STKaiti','KaiTi','Songti SC',serif"
+          font-size="30" font-weight="700" fill="#241f19">AI</text>
+    <text x="100" y="248" font-family="'Noto Serif SC','STKaiti','KaiTi','Songti SC',serif"
+          font-size="26" font-weight="400" fill="#241f19" letter-spacing="8">易经</text>
+  </g>
+</svg>

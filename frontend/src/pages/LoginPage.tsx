@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { Logo } from "../components/Logo";
 
 export function LoginPage() {
   const { login, register, loading } = useAuth();
@@ -26,9 +27,7 @@ export function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-header">
-          <div className="mini-seal login-seal">
-            <span>易</span>
-          </div>
+          <Logo variant="icon" />
           <h1 className="login-title">易境</h1>
         </div>
 

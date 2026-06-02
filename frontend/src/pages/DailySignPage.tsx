@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { interpretSign, InterpretSignResponse } from "../api/aiInterpretation";
 import { drawTodaySign, TodaySignResponse } from "../api/dailySign";
+import { Logo } from "../components/Logo";
 import { MarkdownView } from "../components/MarkdownView";
 
 function getLocalUserKey() {
@@ -69,9 +70,12 @@ export function DailySignPage({ onBack }: DailySignPageProps) {
   return (
     <>
       <nav className="result-top-nav">
-        <button className="back-btn" onClick={onBack}>
-          ← 首页
-        </button>
+        <div className="nav-left">
+          <Logo variant="icon-sm" />
+          <button className="back-btn" onClick={onBack}>
+            ← 首页
+          </button>
+        </div>
         <span className="nav-title">今日一签</span>
         <span className="nav-empty" />
       </nav>

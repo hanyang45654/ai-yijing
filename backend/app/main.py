@@ -43,6 +43,30 @@ def on_startup() -> None:
             )
             db.add(admin)
             db.commit()
+
+        # Auto-seed daily signs (idempotent)
+        from app.models.daily_sign import DailySign
+        if not db.query(DailySign).first():
+            from app.core.seed_data import DAILY_SIGNS
+            for item in DAILY_SIGNS:
+                db.add(DailySign(**item))
+            db.commit()
+    finally:
+        db.close()
+
+
+@app.get("/api/v1/shared/result/{record_id}")
+def get_shared_result(record_id: int) -> dict:
+    from app.db.session import SessionLocal
+    from app.models.five_element_record import FiveElementRecord
+
+    db = SessionLocal()
+    try:
+        record = db.query(FiveElementRecord).filter(FiveElementRecord.id == record_id).first()
+        if not record:
+            from fastapi import HTTPException
+            raise HTTPException(status_code=404, detail="记录不存在")
+        return {**record.response_json, "record_id": record.id}
     finally:
         db.close()
 

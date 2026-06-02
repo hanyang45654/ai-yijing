@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 90" width="320" height="90">
+  <title>脉 — Horizontal Lockup</title>
+  <!-- Icon -->
+  <g transform="translate(8, 12)">
+    <g fill="#8f2e27">
+      <rect x="0" y="0" width="54" height="5" rx="2.5" />
+      <rect x="0" y="12" width="54" height="5" rx="2.5" />
+      <rect x="0" y="24" width="19" height="5" rx="2.5" />
+      <rect x="35" y="24" width="19" height="5" rx="2.5" />
+      <rect x="0" y="36" width="54" height="5" rx="2.5" />
+      <rect x="0" y="48" width="54" height="5" rx="2.5" />
+      <rect x="0" y="60" width="54" height="5" rx="2.5" />
+    </g>
+  </g>
+  <!-- Wordmark -->
+  <text x="80" y="56" font-family="'STKaiti','KaiTi','Songti SC',serif"
+        font-size="30" font-weight="700" fill="#241f19">AI</text>
+  <text x="140" y="56" font-family="'Noto Serif SC','STKaiti','KaiTi','Songti SC',serif"
+        font-size="30" font-weight="400" fill="#241f19" letter-spacing="6">易经</text>
+</svg>

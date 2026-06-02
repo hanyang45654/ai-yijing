@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <title>脉 — Pulse / Digital Hexagram</title>
+  <g fill="#8f2e27">
+    <rect x="44" y="40" width="112" height="8" rx="4" />
+    <rect x="44" y="62" width="112" height="8" rx="4" />
+    <rect x="44" y="84" width="42" height="8" rx="4" />
+    <rect x="114" y="84" width="42" height="8" rx="4" />
+    <rect x="44" y="106" width="112" height="8" rx="4" />
+    <rect x="44" y="128" width="112" height="8" rx="4" />
+    <rect x="44" y="150" width="112" height="8" rx="4" />
+  </g>
+</svg>

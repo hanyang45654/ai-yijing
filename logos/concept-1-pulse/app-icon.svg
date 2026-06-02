@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <title>脉 — App Icon Mockup</title>
+  <defs>
+    <clipPath id="ios-mask">
+      <rect x="0" y="0" width="200" height="200" rx="42" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#ios-mask)">
+    <rect x="0" y="0" width="200" height="200" fill="#f5efe3" />
+    <g fill="#8f2e27">
+      <rect x="48" y="44" width="104" height="8" rx="4" />
+      <rect x="48" y="64" width="104" height="8" rx="4" />
+      <rect x="48" y="84" width="38" height="8" rx="4" />
+      <rect x="114" y="84" width="38" height="8" rx="4" />
+      <rect x="48" y="104" width="104" height="8" rx="4" />
+      <rect x="48" y="124" width="104" height="8" rx="4" />
+      <rect x="48" y="144" width="104" height="8" rx="4" />
+    </g>
+  </g>
+</svg>
