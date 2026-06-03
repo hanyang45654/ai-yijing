@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { DailySignPage } from "./pages/DailySignPage";
 import { FiveElementPage } from "./pages/FiveElementPage";
 import { HomePage } from "./pages/HomePage";
@@ -48,8 +49,10 @@ function AppShell() {
 
 export function App() {
   return (
-    <AuthProvider>
-      <AppShell />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <AppShell />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

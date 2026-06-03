@@ -46,9 +46,9 @@ export function Logo({ variant = "icon" }: LogoProps) {
       <span className="logo logo-horizontal" aria-label="AI易经">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox={`0 0 ${s.w} ${s.h}`}
-          width={s.w}
-          height={s.h}
+          viewBox={`0 0 ${Math.round(s.w)} ${Math.round(s.h)}`}
+          width={Math.round(s.w)}
+          height={Math.round(s.h)}
           fill="none"
         >
           <g fill="currentColor">{barEls}</g>
@@ -65,9 +65,9 @@ export function Logo({ variant = "icon" }: LogoProps) {
     <span className="logo" aria-label="易境">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox={`0 0 ${s.w} ${s.h}`}
-        width={s.w}
-        height={s.h}
+        viewBox={`0 0 ${Math.round(s.w)} ${Math.round(s.h)}`}
+        width={Math.round(s.w)}
+        height={Math.round(s.h)}
         fill="none"
       >
         <g fill="currentColor">{barEls}</g>

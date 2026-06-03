@@ -2336,8 +2336,8 @@ h1 {
   }
 
   .radar-card svg {
-    width: 200px;
-    height: 200px;
+    max-width: 100%;
+    height: auto;
   }
 
   .legend-row {

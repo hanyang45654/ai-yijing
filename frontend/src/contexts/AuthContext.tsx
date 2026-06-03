@@ -64,8 +64,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         method: "POST",
         body: JSON.stringify({ username, password }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.detail || "登录失败");
+      }
       const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || "登录失败");
       localStorage.setItem("token", data.access_token);
       setToken(data.access_token);
     } finally {
@@ -80,8 +83,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         method: "POST",
         body: JSON.stringify({ username, password }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || "注册失败");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.detail || "注册失败");
+      }
       await login(username, password);
     } finally {
       setLoading(false);

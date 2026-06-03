@@ -25,6 +25,9 @@ app.include_router(api_router)
 
 @app.on_event("startup")
 def on_startup() -> None:
+    import logging
+    logger = logging.getLogger("uvicorn")
+
     from app.db.session import Base, SessionLocal, engine
     Base.metadata.create_all(bind=engine)
 
@@ -43,14 +46,32 @@ def on_startup() -> None:
             )
             db.add(admin)
             db.commit()
+            logger.info("Default admin user created")
 
-        # Auto-seed daily signs (idempotent)
+        # Auto-seed daily signs (idempotent upsert)
+        from sqlalchemy import select
         from app.models.daily_sign import DailySign
-        if not db.query(DailySign).first():
-            from app.core.seed_data import DAILY_SIGNS
-            for item in DAILY_SIGNS:
-                db.add(DailySign(**item))
-            db.commit()
+        from app.core.seed_data import DAILY_SIGNS
+
+        seeded = 0
+        for item in DAILY_SIGNS:
+            try:
+                existing = db.scalar(
+                    select(DailySign).where(DailySign.sign_no == item["sign_no"])
+                )
+                if existing is None:
+                    db.add(DailySign(**item))
+                    seeded += 1
+                else:
+                    for key, value in item.items():
+                        setattr(existing, key, value)
+            except Exception:
+                db.rollback()
+                logger.exception("Failed to seed daily sign #%d", item["sign_no"])
+        db.commit()
+
+        total = db.query(DailySign).count()
+        logger.info("Daily signs seeded: %d new, %d total", seeded, total)
     finally:
         db.close()
 

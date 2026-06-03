@@ -50,9 +50,9 @@ export function FiveElementRadar({
   return (
     <svg
       className="five-radar"
-      viewBox={`0 0 ${vbSize} ${vbSize}`}
-      width={size}
-      height={size}
+      viewBox={`0 0 ${Math.round(vbSize)} ${Math.round(vbSize)}`}
+      width={Math.round(size)}
+      height={Math.round(size)}
       role="img"
       aria-label="五行雷达图"
       style={{ overflow: "visible" }}

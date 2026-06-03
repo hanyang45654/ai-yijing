@@ -86,7 +86,10 @@ export function SharedResultPage() {
     );
   }
 
-  const tag = result.personality_tag;
+  const tag = result.personality_tag && typeof result.personality_tag === "object" && "label" in result.personality_tag
+    ? result.personality_tag
+    : null;
+  const elements = Array.isArray(result.elements) ? result.elements : [];
 
   return (
     <div className="shared-result-page">
@@ -115,10 +118,10 @@ export function SharedResultPage() {
 
       <h3 className="section-title">五行分布</h3>
       <div className="radar-card">
-        <FiveElementRadar elements={result.elements} size={220} />
+        <FiveElementRadar elements={elements} size={220} />
       </div>
       <div className="legend-row">
-        {result.elements.map((item) => (
+        {elements.map((item) => (
           <span className="legend-item" key={item.key}>
             <span className={`legend-dot ${item.key}`} />
             {item.name} {item.score}%
@@ -127,7 +130,7 @@ export function SharedResultPage() {
       </div>
 
       <div className="breakdown">
-        {result.elements.map((item) => (
+        {elements.map((item) => (
           <div className="breakdown-row" key={item.key}>
             <span className="elem-char" style={{ color: ELEMENT_COLOR[item.key] }}>
               {item.name}
