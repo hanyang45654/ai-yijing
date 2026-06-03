@@ -73,4 +73,12 @@ def get_shared_result(record_id: int) -> dict:
 
 @app.get("/health")
 def health_check() -> dict[str, str]:
-    return {"status": "ok"}
+    try:
+        from sqlalchemy import text
+        from app.db.session import SessionLocal
+        db = SessionLocal()
+        db.execute(text("SELECT 1"))
+        db.close()
+        return {"status": "ok", "database": "connected"}
+    except Exception:
+        return {"status": "ok", "database": "disconnected"}
